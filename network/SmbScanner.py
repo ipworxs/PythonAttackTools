@@ -11,15 +11,16 @@ print_lock = threading.Lock()
 ScanResults = []
 
 # Port Scan function, which collect the results.
-def portscan(port):
+def SmbScan(targethost):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(10)
-
+    #print(targethost)
+    port = 445
     try:
-        con = s.connect((target,port))
+        con = s.connect((targethost,port))
         with print_lock:
-            ScanResults.append(port)
-            print("open TCP Port:"+str(port))
+            ScanResults.append(targethost)
+            print("open SMB Port:"+str(targethost))
         con.close()
     except:
         pass
@@ -29,7 +30,7 @@ def start(host=None):
     global target
     
     print("##############################################")
-    print("# IPWORXS Port Scanner                       #")
+    print("# IPWORXS SMB Scanner                       #")
     print("##############################################")
     print("# Scans a given Host for full TCP Port Range #")
     print("")
@@ -47,7 +48,7 @@ def start(host=None):
     q = Queue()
 
     # Define Threads count
-    for x in range(2500):
+    for x in range(100):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
@@ -55,15 +56,15 @@ def start(host=None):
 
     start = time.time()
 
-    # 100 jobs assigned.
-    for worker in range(1,65535):
+    # 254 jobs assigned (C Class Network)
+    for worker in range(1,254):
         q.put(worker)
    
     q.join()
 
     print("")
     print("Duration: "+str(datetime.datetime.now() - begin_time))
-    print("found openports: "+str(len(ScanResults)))
+    print("found Hosts with open SMB Ports: "+str(len(ScanResults)))
     print("")
     print("Sorted List:")
     print(sorted(ScanResults))
@@ -72,7 +73,7 @@ def start(host=None):
 def threader():
     while True:
         worker = q.get()
-        portscan(worker)
+        SmbScan("192.168.2."+str(worker))
         q.task_done()
 
 
