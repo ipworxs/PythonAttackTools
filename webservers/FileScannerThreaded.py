@@ -5,6 +5,7 @@ import sys
 import datetime
 import ipaddress
 import requests
+import os
 
 # Ignore SSL Warnings
 requests.packages.urllib3.disable_warnings()
@@ -31,9 +32,13 @@ def WebServerScanner(targethost):
         
             with print_lock:
                 ScanResults.append(url)
-
+                
+                filename = 'C:\\Temp\\'+str(networksegment)+'\\'+str(targethost)+"_"+str(searchfile)
+           
+                # Create Folder if not exist
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
                 # Download if Content exist 
-                open('C:\\Temp\\'+str(targethost)+"_"+str(searchfile), 'wb').write(r.content)
+                open(filename,'wb').write(r.content)
    
 
     except requests.ConnectionError:
@@ -65,8 +70,11 @@ def WebServerScanner(targethost):
 def start(network=None,filename=None):
     global target
     global searchfile
- 
-        
+    global networksegment  
+
+    #valid symbols for Windows Folder
+    networksegment = network.replace("/", "_")
+
         
     print("#########################################################")
     print("# IPWORXS WebServer File Scanner & Downloader           #")
