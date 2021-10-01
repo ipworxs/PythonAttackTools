@@ -14,11 +14,12 @@ ScanResults = []
 # Port Scan function, which collect the results.
 def SmbScan(targethost):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(10)
-    #print(targethost)
+    s.settimeout(1)
+
     port = 445
     try:
-        con = s.connect((targethost,port))
+        con = s.connect((str(targethost),port))
+
         with print_lock:
             ScanResults.append(targethost)
             print("open SMB Port:"+str(targethost))
@@ -29,22 +30,20 @@ def SmbScan(targethost):
 
 def start(host=None):
     global target
-
-    ipifa = ipaddress.ip_interface(host)
-    print(ipifa.is_private)
-    print(ipifa)
-    
+ 
+        
+        
     print("##############################################")
-    print("# IPWORXS SMB Scanner                       #")
+    print("# IPWORXS SMB Scanner                        #")
     print("##############################################")
-    print("# Scans a given Host for full TCP Port Range #")
+    print("# Scans a given Network for SMB Ports        #")
     print("")
 
     if host is None:
-        target= input("Please enter a Host to Scan: ")
+        target= input("Please enter a Network to Scan (in CIDR Format for example 192.168.1.0/24): ")
+        ipifa = ipaddress.ip_network(target)
     else:
-         target = host
-
+        ipifa = ipaddress.ip_network(host)
 
     # Begin Timer
     begin_time = datetime.datetime.now()
@@ -62,14 +61,14 @@ def start(host=None):
     start = time.time()
 
     # 254 jobs assigned (C Class Network)
-    for worker in range(1,254):
+    for worker in ipifa.hosts():
         q.put(worker)
    
     q.join()
 
     print("")
     print("Duration: "+str(datetime.datetime.now() - begin_time))
-    print("found Hosts with open SMB Ports: "+str(len(ScanResults)))
+    print("found Hosts with open SMB Ports on Host: "+str(len(ScanResults)))
     print("")
     print("Sorted List:")
     print(sorted(ScanResults))
@@ -78,7 +77,7 @@ def start(host=None):
 def threader():
     while True:
         worker = q.get()
-        SmbScan("192.168.2."+str(worker))
+        SmbScan((worker))
         q.task_done()
 
 

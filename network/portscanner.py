@@ -14,7 +14,7 @@ ScanResults = []
 # Port Scan function, which collect the results.
 def portscan(port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(10)
+    s.settimeout(1)
 
     try:
         con = s.connect((target,port))
