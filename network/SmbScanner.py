@@ -4,6 +4,7 @@ import time
 import socket
 import sys
 import datetime
+import ipaddress
 
 # Thread Lock
 print_lock = threading.Lock()
@@ -28,6 +29,10 @@ def SmbScan(targethost):
 
 def start(host=None):
     global target
+
+    ipifa = ipaddress.ip_interface(host)
+    print(ipifa.is_private)
+    print(ipifa)
     
     print("##############################################")
     print("# IPWORXS SMB Scanner                       #")

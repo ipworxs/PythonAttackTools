@@ -5,6 +5,7 @@ import socket
 import sys
 import datetime
 
+
 # Thread Lock
 print_lock = threading.Lock()
 
@@ -27,6 +28,8 @@ def portscan(port):
 
 def start(host=None):
     global target
+
+   
     
     print("##############################################")
     print("# IPWORXS Port Scanner                       #")
