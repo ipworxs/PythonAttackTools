@@ -13,36 +13,43 @@ ScanResults = []
 # Port Scan function, which collect the results.
 def portscan(port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(100)
+    s.settimeout(10)
+
     try:
-        print(port, end =" ")
         con = s.connect((target,port))
         with print_lock:
             ScanResults.append(port)
+            print("open TCP Port:"+str(port))
         con.close()
     except:
         pass
 
 
 def start(host=None):
-
     global target
-    target = host
     
-    # Create the queue and threader 
+    print("##############################################")
+    print("# IPWORXS Port Scanner                       #")
+    print("##############################################")
+    print("# Scans a given Host for full TCP Port Range #")
+    print("")
+
+    if host is None:
+        target= input("Please enter a Host to Scan: ")
+    else:
+         target = host
+
+
+    # Begin Timer
     begin_time = datetime.datetime.now()
 
     global q
     q = Queue()
 
-    # how many threads are we going to allow for
-    for x in range(500):
+    # Define Threads count
+    for x in range(2500):
         t = threading.Thread(target=threader)
-  
-        # classifying as a daemon, so they will die when the main dies
         t.daemon = True
-
-        # begins, must come after daemon definition
         t.start()
 
 
@@ -51,29 +58,24 @@ def start(host=None):
     # 100 jobs assigned.
     for worker in range(1,65535):
         q.put(worker)
-
-    # wait until the thread terminates.
    
-
     q.join()
+
+
     print("Duration: "+str(datetime.datetime.now() - begin_time))
+    print("found openports: "+str(len(ScanResults)))
+    print("")
+    print("Sorted List:")
     print(sorted(ScanResults))
   
 
-
-# The threader thread pulls an worker from the queue and processes it
 def threader():
     while True:
-        # gets an worker from the queue
         worker = q.get()
-
-        # Run the example job with the avail worker in queue (thread)
         portscan(worker)
-
-        # completed with the job
         q.task_done()
 
 
 if __name__ == "__main__":
-    a = str(sys.argv[1])
+    a = sys.argv[1] if len(sys.argv) > 1 else None
     start(a)
