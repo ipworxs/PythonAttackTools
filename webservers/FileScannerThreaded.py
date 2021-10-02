@@ -26,7 +26,7 @@ def WebServerScanner(targethost):
     print(url)
 
     try:
-        r = requests.get(url, verify=False, timeout=10)
+        r = requests.get(url, verify=False, timeout=15)
         if r.status_code == 200:
             print(url+" found")
         
@@ -103,7 +103,7 @@ def start(network=None,filename=None):
     q = Queue()
 
     # Define Threads count
-    for x in range(50):
+    for x in range(1000):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
@@ -119,7 +119,7 @@ def start(network=None,filename=None):
 
     print("")
     print("Duration: "+str(datetime.datetime.now() - begin_time))
-    print("found Hosts with open SMB Ports on Host: "+str(len(ScanResults)))
+    print("found Hosts with given File on Host: "+str(len(ScanResults)))
     print("")
     print("Sorted List:")
     print(sorted(ScanResults))
@@ -128,7 +128,7 @@ def start(network=None,filename=None):
 def threader():
     while True:
         worker = q.get()
-        WebServerScanner((worker))
+        WebServerScanner(worker)
         q.task_done()
 
 
