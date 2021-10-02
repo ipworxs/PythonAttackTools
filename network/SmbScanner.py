@@ -33,10 +33,10 @@ def start(host=None):
  
         
         
-    print("##############################################")
-    print("# IPWORXS SMB Scanner                        #")
-    print("##############################################")
-    print("# Scans a given Network for SMB Ports        #")
+    print("###################################################")
+    print("# IPWORXS SMB Scanner                             #")
+    print("###################################################")
+    print("# Scans a given Network for open SMB Ports        #")
     print("")
 
     if host is None:
