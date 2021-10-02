@@ -1,3 +1,22 @@
+#!/usr/bin/env python
+
+__description__ = 'SMB Port Scanner '
+__author__ = 'Oliver G.'
+__version__ = '0.0.1'
+__date__ = '2021/10/2021'
+
+"""
+Source code put in public domain, no Copyright
+Use this tool at your own risk
+
+
+History:
+  2021/10/2021: start
+ 
+Todo:
+"""
+
+
 import threading
 from queue import Queue
 import time
