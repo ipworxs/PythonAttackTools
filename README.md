@@ -1,2 +1,2 @@
 # PythonAttackTools
-Collection of Python based attack scripts
+Collection of Python based recon & attack scripts
