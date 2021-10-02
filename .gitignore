@@ -3,3 +3,4 @@ network/__pycache__/SmbScanner.cpython-39.pyc
 .vscode/launch.json
 endpoints/__pycache__/webcamshooter.cpython-39.pyc
 webservers/__pycache__/FileScannerThreaded.cpython-39.pyc
+network/__pycache__/PortSweepScan.cpython-39.pyc
